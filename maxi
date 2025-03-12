@@ -252,12 +252,7 @@ task.spawn(function()
                 local skillAction = skillFolder:FindFirstChild(action)
                 if skillAction then
                     skillAction:FireServer()
-                    print("Fired skill:", skillset, action)
-                else
-                    warn("Action not found:", action)
                 end
-            else
-                warn("Skillset not found:", skillset)
             end
         end
         task.wait(1) -- Chờ 1 giây trước vòng lặp kế tiếp

